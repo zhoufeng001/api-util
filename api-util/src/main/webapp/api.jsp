@@ -14,7 +14,7 @@
 <title>Api调试工具</title>  
 </head>  
 <body>
-<div class="easyui-layout" style="width:1300px;height:600px;"> 
+<div class="easyui-layout" style="width:1300px;height:600px;">
    <div data-options="region:'north'" style="height:50px">
    		<center><h1>Api调试工具</h1></center> 
    </div>  
@@ -54,8 +54,8 @@
         </ul>
    </div>  
    <div data-options="region:'center',title:'接口调试',iconCls:'icon-man'">
-       <div class="easyui-tabs" style="width:1000px;height:500px" id="apiTabs">    
-	        <div title="接口调试介绍" style="padding:10px">      
+       <div class="easyui-tabs" style="width:1100px;height:500px" id="apiTabs">    
+	        <div title="接口调试介绍" style="padding:10px">        
 	            <p style="font-size:14px">未经允许不得私自传播</p>       
 	            <ul>
 	                <li>easyui is a collection of user-interface plugin based on jQuery.</li>
