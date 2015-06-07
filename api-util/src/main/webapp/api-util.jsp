@@ -36,7 +36,7 @@
         <option value="post">Post</option>   
     </select>  
 	<span class="lab">URL：</span>
-	<input name="value" class="easyui-textbox" required="false" id="requestURL" style="width: 200px;">     
+	<input name="value" class="easyui-textbox" required="false" id="requestURL" style="width: 350px;">  
     <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" id="sendRequest">发送请求</a>  
     <span class="lab"><a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" id="saveApi">保存模板</a></span>  
     <br/><br/>

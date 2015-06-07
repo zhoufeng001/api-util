@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import api.ApiStore;
 import api.ClasspathApiStore;
-import api.HtmlFormatUtil;
 import api.HttpClientUtil;
 import api.JsonFormatTool;
 import api.pojo.Api;
@@ -29,7 +28,6 @@ public class ApiUtilServlet extends HttpServlet{
 	private static final Logger log = LoggerFactory.getLogger(ApiUtilServlet.class); 
 
 	private ApiStore apiStore ;
-//	ClasspathApiStore.setApiStoreDir("F:/apis");
 	/**
 	 * 
 	 */
@@ -77,17 +75,11 @@ public class ApiUtilServlet extends HttpServlet{
 				ApiVo api = JSON.parseObject(apiJson, ApiVo.class);
 				api.parse();   
 				String result = null ;
-				String resultFormat = null ;
 				try {
 					result = HttpClientUtil.doRequest(api);
 				} catch (Exception e) {
 					log.error(e.getMessage() ,e); 
 					result = e.getMessage(); 
-				}
-				try {
-					resultFormat = HtmlFormatUtil.toHTMLString(JsonFormatTool.formatJson(result,"\t"));
-				} catch (Exception e) {
-					resultFormat = result ;
 				}
 				out.write(JsonFormatTool.formatJson(result,"\t"));  
 			}
