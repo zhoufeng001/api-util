@@ -10,38 +10,35 @@
 <link rel="stylesheet" type="text/css" href="./css/api-util.css">  
 <script type="text/javascript" src="./js/jquery.min.js"></script> 
 <script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="./js/jquery.json.min.js"></script> 
+<script type="text/javascript" src="./js/jsonformat.js"></script>
+<script type="text/javascript" src="./js/api-util.js"></script>
 <title>Insert title here</title>
-</head>  
+</head>    
 
 <body>
 	
-	<script type="text/javascript" src="./js/api-util.js"></script>
 	<div id="loading" style="position: absolute; z-index: 1000; top: 0px; left: 0px; width: 100%; height: 100%; background: #DDDDDB; text-align: center; padding-top: 20%;"></div> 
 	<span class="lab">Api：</span>
-	<input class="easyui-combobox" name="language" style="width:50%"
+	<input id="apiList" class="easyui-combobox" name="api" style="width:50%"
             data-options="
-                url: 'js/combobox_data2.json', 
-                method: 'get',
+                url: 'api.json?method=getAllTemplates',   
+                method: 'get',    
                 valueField:'value',
                 textField:'text',
                 groupField:'group'"> 
-                
-                
-	<span class="lab"><a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存模板</a></span>
-	<br/><br/>
+    <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" id="deleteApi">删除模板</a>  
+	<br/><br/><hr/>    
 	
 	<span class="lab">Method：</span>
-	<select class="easyui-combobox" name="state" style="width:200px;" id="method">
+	<select class="easyui-combobox" name="state" style="width:80px;" id="method">
         <option value="get">Get</option> 
-        <option value="post">Post</option> 
-    </select>
-	<br/><br/>
-	
+        <option value="post">Post</option>   
+    </select>  
 	<span class="lab">URL：</span>
-	<input name="value" class="easyui-textbox" required="false" id="requestURL">   
-   
-   <a href="#" class="easyui-linkbutton">请&nbsp;&nbsp;求</a>
-    
+	<input name="value" class="easyui-textbox" required="false" id="requestURL" style="width: 200px;">     
+    <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" id="sendRequest">发送请求</a>  
+    <span class="lab"><a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" id="saveApi">保存模板</a></span>  
     <br/><br/>
 	
 	<!-- Header start -->
@@ -117,32 +114,49 @@
     </div>
     
     <div id="responseSource" class="easyui-panel" title="ResponseSource" style="width:1000px;padding:10px;">    
-        <p style="font-size:14px">jQuery EasyUI framework helps you build your web pages easily.</p>
-        <ul>
-            <li>easyui is a collection of user-interface plugin based on jQuery.</li>
-            <li>easyui provides essential functionality for building modem, interactive, javascript applications.</li>
-            <li>using easyui you don't need to write many javascript code, you usually defines user-interface by writing some HTML markup.</li>
-            <li>complete framework for HTML5 web page.</li>
-            <li>easyui save your time and scales while developing your products.</li>
-            <li>easyui is very easy but powerful.</li>
-        </ul>
+    	<div id="responseSourceCode"></div>   
      </div>
       
     <div id="responseFormat" class="easyui-panel" title="ResponseFormat" style="width:1000px;padding:10px;">    
-        <p style="font-size:14px">jQuery EasyUI framework helps you build your web pages easily.</p>
-        <ul>
-            <li>easyui is a collection of user-interface plugin based on jQuery.</li>
-            <li>easyui provides essential functionality for building modem, interactive, javascript applications.</li>
-            <li>using easyui you don't need to write many javascript code, you usually defines user-interface by writing some HTML markup.</li>
-            <li>complete framework for HTML5 web page.</li>
-            <li>easyui save your time and scales while developing your products.</li>
-            <li>easyui is very easy but powerful.</li>
-        </ul>
-     </div>
-    
-    
+        <div id="responseFormatCode"></div>
+     </div>  
     <!-- Params end -->
-    <script type="text/javascript">
+    
+    <!-- DeleteApiDialog -->
+     <div id="deleteApiDialog" class="easyui-dialog" title="删除Api" style="width:400px;height:200px;padding:10px" closed="true"  resizable="true"  modal="true"
+            data-options="
+                iconCls: 'icon-delete', 
+                buttons: '#deleteApiDialogButs' 
+            "> 
+            <p id="deleteApiTips"></p>
+    </div>
+    <div id="deleteApiDialogButs">  
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doDeleteApi()">删除</a>  
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#deleteApiDialog').dialog('close')">取消</a> 
+    </div>
+    <!--  -->
+    
+    <!-- SaveApiDialog -->
+     <div id="saveApiDialog" class="easyui-dialog" title="保存Api模板" style="width:400px;height:200px;padding:10px" closed="true"  resizable="true"  modal="true"
+            data-options="
+                iconCls: 'icon-delete', 
+                buttons: '#saveApiDialogButs' 
+            "> 
+	        <div class="fitem">
+	             <label>分组:</label> 
+	             <input name="key" class="easyui-textbox" required="true" id="saveApiGroup">   
+	        </div> 
+	        <div class="fitem">
+	             <label>名称:</label>   
+	             <input name="value" class="easyui-textbox" required="false" id="saveApiName"> 
+	         </div> 
+    </div>
+    <div id="saveApiDialogButs">    
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doSaveApi()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#saveApiDialog').dialog('close')">取消</a> 
+    </div>
+    
+    <script type="text/javascript">        
 	    function show(){
 	        $("#loading").fadeOut("normal", function(){
 	             $(this).remove();

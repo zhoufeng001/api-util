@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.alibaba.fastjson.JSON;
+
 import api.pojo.Api;
 
 public class ApiTest {
@@ -15,12 +17,13 @@ public class ApiTest {
 		ClasspathApiStore.setApiStoreDir("F:/apis");
 		ApiStore apiStroe = ClasspathApiStore.getInstance();
 		Api api1 = new Api() ;
-		api1.setGroup("用户"); 
-		api1.setMethod("post");
-		api1.setName("用户注册");
-		api1.setUrl("http://127.0.0.1/login.htm"); 
+		api1.setGroup("动态"); 
+		api1.setMethod("get"); 
+		api1.setName("获取动态数量");
+		api1.setUrl("http://127.0.0.1/feedsCount.htm"); 
 		Map<String, String> headers = new HashMap<String,String>();
 		headers.put("token", "12345678") ;
+		headers.put("xx", "abc") ;
 		api1.setHeaders(headers);
 		Map<String, String> params = new HashMap<String,String>();
 		params.put("name", "is_zhoufeng") ;
@@ -34,7 +37,9 @@ public class ApiTest {
 		ClasspathApiStore.setApiStoreDir("F:/apis");
 		ApiStore apiStroe = ClasspathApiStore.getInstance();
 		List<Api> apis = apiStroe.getAll();
-		System.out.println(apis);
+		String jsonString = JSON.toJSONString(apis);
+		jsonString = JsonFormatTool.formatJson(jsonString, "\t"); 
+		System.out.println(jsonString);
 	}
 	
 	@Test

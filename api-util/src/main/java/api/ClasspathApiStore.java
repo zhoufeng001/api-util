@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -100,8 +102,9 @@ public class ClasspathApiStore implements ApiStore{
 		String content = apiToJson(api);
 		FileOutputStream os = null ;
 		try {
-			 os = new FileOutputStream(newApi) ;
-			 IOUtils.write(content, os);
+			 os = new FileOutputStream(newApi) ; 
+			 IOUtils.write(content, os , Charset.forName("utf-8"));
+			 reload();
 		} catch (Exception e) {
 			log.error(e.getMessage() ,e); 
 		} finally{
@@ -143,6 +146,19 @@ public class ClasspathApiStore implements ApiStore{
 				}
 			}
 		}
+		
+		//根据group排序
+		Collections.sort(newApis,new Comparator<Api>() {
+			@Override
+			public int compare(Api o1, Api o2) {
+				int i = o1.getGroup().compareTo(o2.getGroup()) ;
+				if(i != 0){
+					return i ;
+				}
+				return o1.getName().compareTo(o2.getName()); 
+			}
+		});
+		
 		apis = newApis ;
 	}
 

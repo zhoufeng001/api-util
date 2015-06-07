@@ -13,14 +13,18 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <servlet-api.version>3.1.0</servlet-api.version>
-    <httpclient.version>4.4.1</httpclient.version> 
-    <jetty.version>9.2.5.v20141112</jetty.version>
+    <httpclient.version>3.0.1</httpclient.version> 
+    <jetty.version>9.2.5.v20141112</jetty.version> 
+    <logback.version>1.1.2</logback.version>
+	<slf4j.version>1.7.9</slf4j.version>
+	<source.version>1.8</source.version> 
+	<target.version>1.8</target.version>
   </properties>
   
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <artifactId>junit</artifactId> 
       <version>4.10</version>
       <scope>test</scope>
     </dependency>
@@ -29,14 +33,13 @@
          <artifactId>javax.servlet-api</artifactId>
          <version>${servlet-api.version}</version>
          <scope>compile</scope>
-     </dependency>
-     <dependency>
-		<groupId>org.apache.httpcomponents</groupId>
-		<artifactId>httpclient</artifactId>
-		<version>${httpclient.version}</version>
-	</dependency>
-	
+     </dependency> 
 	<dependency>
+		<groupId>commons-httpclient</groupId>
+		 <artifactId>commons-httpclient</artifactId>
+		 <version>${httpclient.version}</version>
+	</dependency>
+	<dependency>  
 		<groupId>com.alibaba</groupId>
 		<artifactId>fastjson</artifactId>
 		<version>1.2.6</version>
@@ -48,11 +51,40 @@
 		<version>2.4</version>
 	</dependency>
 	
-	<dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-api</artifactId>
-		<version>1.7.12</version>
-	</dependency>
+	
+	<!-- logback start -->
+        <dependency>
+             <groupId>ch.qos.logback</groupId>
+             <artifactId>logback-classic</artifactId>
+             <version>${logback.version}</version>
+             <type>jar</type>
+             <exclusions>
+            	<exclusion>
+            		<artifactId>slf4j-api</artifactId>
+            		<groupId>org.slf4j</groupId>
+            	</exclusion>
+            </exclusions>
+        </dependency>
+        <!-- logback end -->
+		<!-- SLF4J  -->
+        <!-- 为了将log4j的日志也使用slf4j输出，需要配置下面的转换器 -->
+        <dependency>  
+		    <groupId>org.slf4j</groupId>  
+		    <artifactId>jcl-over-slf4j</artifactId>  
+		    <version>${slf4j.version}</version>  
+		</dependency>  
+		<dependency>  
+		    <groupId>org.slf4j</groupId>  
+		    <artifactId>log4j-over-slf4j</artifactId>  
+		    <version>${slf4j.version}</version>  
+		</dependency>  
+		<dependency>  
+		    <groupId>org.slf4j</groupId>  
+		    <artifactId>jul-to-slf4j</artifactId>  
+		    <version>${slf4j.version}</version>  
+		</dependency>  
+		<!-- SLF4J -->
+		
 	
   </dependencies>
   
@@ -74,6 +106,14 @@
   
   <build>
   	<plugins>
+  	   <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.1</version>
+          <configuration>
+              <source>${source.version}</source>
+              <target>${target.version}</target>
+          </configuration>
+       </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
