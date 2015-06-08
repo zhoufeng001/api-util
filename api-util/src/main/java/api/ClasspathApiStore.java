@@ -119,6 +119,9 @@ public class ClasspathApiStore implements ApiStore{
 	}
 
 	private void reload(){
+		if(API_STORE_DIR == null){
+			API_STORE_DIR = "F:/apis" ;
+		}
 		File dir = new File(API_STORE_DIR);
 		if(!dir.exists()){
 			dir.mkdirs();

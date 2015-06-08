@@ -18,18 +18,22 @@ function resetHeaderKeyValueDialog(){
 }
 
 function saveHeader(){  
-	var kye = $("#headerKey").textbox("getValue") ;
-	var value = $("#headerValue").textbox("getValue") ; 
-	$('#headerKeyValueDialog').dialog('close'); 
-	if(saveType === insert){
-		$('#headerTab').datagrid('appendRow',{key:kye,value:value});          
-	}else if(saveType === update){
-		$('#headerTab').datagrid('updateRow',
-				{
-			index:updateRowId,
-			row:{key:kye,value:value} 
-				}
-		);       
+	var keyValid = $("#headerKey").textbox("isValid");
+	var valueValid = $("#headerValue").textbox("isValid");
+	if(keyValid && valueValid){
+		var kye = $("#headerKey").textbox("getValue") ;
+		var value = $("#headerValue").textbox("getValue") ; 
+		$('#headerKeyValueDialog').dialog('close'); 
+		if(saveType === insert){
+			$('#headerTab').datagrid('appendRow',{key:kye,value:value});          
+		}else if(saveType === update){
+			$('#headerTab').datagrid('updateRow',
+					{
+						index:updateRowId,  
+						row:{key:kye,value:value} 
+					}
+			);       
+		}
 	}
 }
 
@@ -70,18 +74,22 @@ function resetParamKeyValueDialog(){
 }
 
 function saveParam(){  
-	var kye = $("#paramKey").textbox("getValue") ;
-	var value = $("#paramValue").textbox("getValue") ; 
-	$('#paramsKeyValueDialog').dialog('close'); 
-	if(saveType === insert){
-		$('#paramsTab').datagrid('appendRow',{key:kye,value:value});          
-	}else if(saveType === update){
-		$('#paramsTab').datagrid('updateRow',
-				{
-			index:updateRowId,
-			row:{key:kye,value:value} 
-				}
-		);       
+	var keyValid = $("#paramKey").textbox("isValid");
+	var valueValid = $("#paramValue").textbox("isValid");
+	if(keyValid && valueValid){
+		var kye = $("#paramKey").textbox("getValue") ;
+		var value = $("#paramValue").textbox("getValue") ; 
+		$('#paramsKeyValueDialog').dialog('close'); 
+		if(saveType === insert){
+			$('#paramsTab').datagrid('appendRow',{key:kye,value:value});          
+		}else if(saveType === update){
+			$('#paramsTab').datagrid('updateRow',
+					{
+						index:updateRowId,
+						row:{key:kye,value:value} 
+					}
+			);       
+		}  
 	}
 }
 
@@ -183,21 +191,31 @@ function sendRequest(){
 		return; 
 	}
 	var api = getApi();
-	$("#responseSourceCode").html("");
-	$("#responseFormatCode").html("");
-	$.post(
-			"api.json",
-			{
-				method:"doRequest",
-				apiJson:$.toJSON(api)
-			},
-			function(result){    
-				$("#responseSourceCode").text(result);   
-				var formatResult = JSON.stringify(eval("(" + result + ")"), null, '\t');   
-				formatResult = toHtml(formatResult );  
-				$("#responseFormatCode").html(formatResult);  
-			}
-	);
+	$.ajax({
+		type:"post",
+		url:"api.json",
+		data:{
+			method:"doRequest",
+			apiJson:$.toJSON(api)
+		},
+		beforeSend:function(){
+			$("#responseSourceCode").html("");
+			$("#responseFormatCode").html(""); 
+			$("#requestProgressDialog").dialog("open"); 
+		},
+		complete:function(){   
+			$("#requestProgressDialog").dialog("close"); 
+		},  
+		success:function(result){
+			$("#responseSourceCode").text(result);   
+			try{
+				var formatResult = JSON.stringify(eval("(" + result + ")"), null, '\t');
+				showCode(formatResult,document.getElementById("responseFormatCode"));   
+			}catch(err){
+				console.log(err); 
+			} 
+		},
+	}); 
 }
 
 function getApi(){
@@ -271,24 +289,16 @@ $(function(){
 
 
 
-});
+}); 
 
+function showCode(str, co) {
+	var codeAera = document.createElement("pre");   
+	codeAera.name = "code";
+	codeAera.setAttribute('name', 'code'); // ff下须如此
+	codeAera.className = 'javascript';
+	codeAera.id = 'script_div';
+	co.appendChild(codeAera);
+	codeAera.innerHTML = str;  
+	dp.SyntaxHighlighter.HighlightAll('code'); 
+} 
 
-function toHtml(str){
-	var formatStr = "";
-	if(str == null){
-		return formatStr ;
-	}
-	for(var i = 0 ; i < str.length ; i++){
-		var c = str.charAt(i);    
-		if (c == '\t') 
-			formatStr += "&nbsp;&nbsp;&nbsp;&nbsp; ";   
-		else if   (c == '\n')   
-			formatStr += "<br/>";  
-		else if   (c == ' ')
-			formatStr += "&nbsp;";   
-		else    
-			formatStr += c;   
-	}
-	return formatStr ;  
-}

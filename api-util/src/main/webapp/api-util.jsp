@@ -4,15 +4,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="./css/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css" href="./css/themes/icon.css">
-<link rel="stylesheet" type="text/css" href="./css/themes/color.css">
-<link rel="stylesheet" type="text/css" href="./css/api-util.css">  
-<script type="text/javascript" src="./js/jquery.min.js"></script> 
-<script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="./js/jquery.json.min.js"></script> 
-<script type="text/javascript" src="./js/jsonformat.js"></script>
-<script type="text/javascript" src="./js/api-util.js"></script>
+<link rel="stylesheet" type="text/css" href="./api_css/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="./api_css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="./api_css/themes/color.css">
+<link rel="stylesheet" type="text/css" href="./highlight/Styles/SyntaxHighlighter.css">
+<link rel="stylesheet" type="text/css" href="./api_css/api-util.css">  
+<script type="text/javascript" src="./api_js/jquery.min.js"></script> 
+<script type="text/javascript" src="./api_js/jquery.easyui.min.js"></script>  
+<script type="text/javascript" src="./api_js/jquery.json.min.js"></script>    
+<script type="text/javascript" src="./highlight/Scripts/shCore.js"></script> 
+<script type="text/javascript" src="./highlight/Scripts/shBrushJScript.js"></script>   
+<script type="text/javascript" src="./api_js/jsonformat.js"></script>
+<script type="text/javascript" src="./api_js/api-util.js"></script>
 <title>Insert title here</title>
 </head>    
 
@@ -36,7 +39,7 @@
         <option value="post">Post</option>   
     </select>  
 	<span class="lab">URL：</span>
-	<input name="value" class="easyui-textbox" required="false" id="requestURL" style="width: 350px;">  
+	<input name="value" class="easyui-textbox" required="false" id="requestURL" style="width: 400px;">     
     <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" id="sendRequest">发送请求</a>  
     <span class="lab"><a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" id="saveApi">保存模板</a></span>  
     <br/><br/>
@@ -113,11 +116,11 @@
 	    </div>
     </div>
     
-    <div id="responseSource" class="easyui-panel" title="ResponseSource" style="width:1000px;padding:10px;">    
+    <div id="responseSource" class="easyui-panel" title="响应内容" style="width:1000px;padding:10px;">    
     	<div id="responseSourceCode"></div>   
      </div>
       
-    <div id="responseFormat" class="easyui-panel" title="ResponseFormat" style="width:1000px;padding:10px;">    
+    <div id="responseFormat" class="easyui-panel" title="响应内容(格式化后)" style="width:1000px;padding:10px;">  
         <div id="responseFormatCode"></div>
      </div>  
     <!-- Params end -->
@@ -155,6 +158,12 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doSaveApi()">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#saveApiDialog').dialog('close')">取消</a> 
     </div>
+    
+     <div id="requestProgressDialog" class="easyui-dialog" title="正在请求..."   
+   		  style="width:300px;height:180px;padding:10px" closed="true"  resizable="false"  modal="true"
+          >
+	      <center><img src="api_img/loading.gif" /></center>  
+    </div>  
     
     <script type="text/javascript">        
 	    function show(){
