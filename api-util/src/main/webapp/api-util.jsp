@@ -16,7 +16,7 @@
 <script type="text/javascript" src="./highlight/Scripts/shBrushJScript.js"></script>   
 <script type="text/javascript" src="./api_js/jsonformat.js"></script>
 <script type="text/javascript" src="./api_js/api-util.js"></script>
-<title>Insert title here</title>
+<title>Api调试工具</title>
 </head>    
 
 <body>
