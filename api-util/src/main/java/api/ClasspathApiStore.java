@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -25,7 +26,20 @@ import com.alibaba.fastjson.JSON;
 public class ClasspathApiStore implements ApiStore{
 
 	private static final Logger log = LoggerFactory.getLogger(ClasspathApiStore.class); 
-
+	
+	private static final Properties properties = new Properties();
+	
+	private static String defaultApiDir ;
+	
+	static{
+		try {
+			properties.load(ClasspathApiStore.class.getResourceAsStream("/api.properties"));
+			defaultApiDir = properties.getProperty("api.dir", "/apis");
+		} catch (IOException e) {
+			log.error("加载资源文件失败..." , e); 
+		}
+	}
+	
 	/**
 	 * API存储目录
 	 */
@@ -120,7 +134,7 @@ public class ClasspathApiStore implements ApiStore{
 
 	private void reload(){
 		if(API_STORE_DIR == null){
-			API_STORE_DIR = "F:/apis" ;
+			API_STORE_DIR = defaultApiDir ;
 		}
 		File dir = new File(API_STORE_DIR);
 		if(!dir.exists()){
